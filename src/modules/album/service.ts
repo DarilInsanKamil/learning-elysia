@@ -49,7 +49,7 @@ export abstract class Album {
         const updated_at = new Date().toISOString()
         const albumQuery = {
             text: 'update albums set name = $1, year = $2, cover = $3, updated_at = $4 where id = $5 RETURNING id',
-            values: [ name, year, cover, updated_at, id]
+            values: [name, year, cover, updated_at, id]
         }
 
         const result = await pool.query(albumQuery)
@@ -57,5 +57,15 @@ export abstract class Album {
             throw status(404, 'Gagal memperbarui album, id album tidak ada')
         }
         return result.rows[0].id
+    }
+    static async deleteAlbumById(albumId: string) {
+        const albumQuery = {
+            text: 'DELETE FROM albums WHERE id = $1 RETURNING id',
+            values: [albumId]
+        }
+        const result = await pool.query(albumQuery)
+        if (!result.rows.length) {
+            throw status(404, 'Gagal menghapus album, id album tidak ada')
+        }
     }
 }
