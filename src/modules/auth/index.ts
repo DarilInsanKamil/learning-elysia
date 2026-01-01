@@ -105,6 +105,7 @@ export const auth = new Elysia({ prefix: '/auth' })
             };
         }
     )
+    .use(authGuard)
     .post(
         '/logout',
         async ({ cookie: { accessToken, refreshToken } }) => {
@@ -117,3 +118,4 @@ export const auth = new Elysia({ prefix: '/auth' })
             }
         }
     )
+    
