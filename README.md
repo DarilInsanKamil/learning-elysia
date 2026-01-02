@@ -1,7 +1,3 @@
-Tentu, ini adalah draft `README.md` yang lengkap untuk proyek Anda, mencakup cara instalasi, konfigurasi database, struktur proyek, dan dokumentasi API berdasarkan kode yang Anda unggah.
-
----
-
 # Learning Elysia API
 
 Proyek ini adalah backend RESTful API yang dibangun menggunakan framework ElysiaJS yang berjalan di atas runtime Bun. Proyek ini menyediakan layanan pengelolaan musik (Lagu dan Album) serta otentikasi pengguna menggunakan JWT dan PostgreSQL sebagai database.
