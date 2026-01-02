@@ -1,5 +1,5 @@
 import { status } from "elysia"
-import { pool } from "../../db"
+import { pool } from "../../utils/db"
 import { AuthModel } from "./model"
 import { AuthError } from "../../errors/authError"
 

@@ -1,5 +1,5 @@
 import { nanoid } from "nanoid";
-import { pool, query } from "../../db";
+import { pool, query } from "../../utils/db";
 import { UserModel } from "./model";
 import bcrypt from 'bcrypt';
 import { status } from "elysia";

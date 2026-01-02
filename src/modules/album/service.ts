@@ -1,6 +1,6 @@
 import { nanoid } from "nanoid";
 import { AlbumModel } from "./model";
-import { pool } from "../../db";
+import { pool } from "../../utils/db";
 import { AlbumError } from "../../errors/albumError";
 
 export abstract class Album {
