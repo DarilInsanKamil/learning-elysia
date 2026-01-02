@@ -3,6 +3,7 @@ import { pool, query } from "../../utils/db";
 import { UserModel } from "./model";
 import bcrypt from 'bcrypt';
 import { status } from "elysia";
+import { UserError } from "../../errors/userError";
 
 export abstract class User {
     static async registerUser({ username, fullname, password }: UserModel.UserPayload) {
@@ -29,7 +30,7 @@ export abstract class User {
 
         const result = await pool.query(userQuery)
         if (!result.rows.length) {
-            throw status(404, 'User Not Found' satisfies UserModel.GetUserByIdInvalid)
+            throw new UserError('User tidak ditemukan, id user tidak ada', 404)
         }
         return result.rows[0]
     }

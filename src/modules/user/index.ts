@@ -36,7 +36,7 @@ export const user = new Elysia({ prefix: '/auth' })
         params: UserModel.GetUserById,
         response: {
             200: UserModel.GetUserByIdResponse,
-            400: UserModel.ErrorResponse
+            404: UserModel.ErrorResponse
         }
     }
     )

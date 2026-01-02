@@ -5,6 +5,7 @@ import { logger } from "@bogeychan/elysia-logger";
 import { album } from "./modules/album";
 import staticPlugin from "@elysiajs/static";
 import { song } from "./modules/song";
+import { playlist } from "./modules/playlist";
 
 export const app = new Elysia()
   .use(
@@ -16,6 +17,7 @@ export const app = new Elysia()
   .use(user)
   .use(auth)
   .use(album)
+  .use(playlist)
   .use(song)
   .get("/", () => "Hello Elysia").listen(3000);
 
