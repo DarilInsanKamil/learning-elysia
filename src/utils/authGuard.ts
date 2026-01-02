@@ -1,4 +1,3 @@
-import jwt from '@elysiajs/jwt';
 import { Elysia } from 'elysia';
 import { jwtPlugin } from './jwtPlugin';
 

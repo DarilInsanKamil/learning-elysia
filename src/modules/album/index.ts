@@ -15,10 +15,10 @@ export const album = new Elysia({ prefix: '/albums' })
         '/create',
         async ({ body }) => {
             const response = await Album.addAlbum(body)
-            return {
-                message: 'Berhasil menambahkan album',
+            return status(201, {
+                message: "Berhasil menambahkan album",
                 id: response
-            }
+            })
         }, {
         body: AlbumModel.AlbumPayload,
         response: {
@@ -31,7 +31,7 @@ export const album = new Elysia({ prefix: '/albums' })
         '/',
         async () => {
             const response = await Album.getAlbum()
-            return response
+            return status(200, response)
         }, {
         response: {
             200: AlbumModel.AlbumResponse,
@@ -45,7 +45,7 @@ export const album = new Elysia({ prefix: '/albums' })
             const { albumId } = params
 
             const response = await Album.getAlbumById(albumId)
-            return response
+            return status(200, response)
         }, {
         response: {
             200: AlbumModel.AlbumResponseById,
@@ -61,6 +61,7 @@ export const album = new Elysia({ prefix: '/albums' })
 
             const response = await Album.putAlbumById(albumId, body)
             return {
+                status: 200,
                 message: 'Berhasil edit album',
                 id: response
             }
@@ -77,13 +78,19 @@ export const album = new Elysia({ prefix: '/albums' })
         async ({ params }) => {
             const { albumId } = params
             await Album.deleteAlbumById(albumId)
-            return {
+            return status(200, {
                 message: 'Berhasil menghapus album'
-            }
+            })
         }, {
         response: {
-            204: t.Literal('Berhasil menghapus album'),
+            200: AlbumModel.AlbumResponseDelete,
             404: AlbumModel.ErrorResponse
         }
     }
     )
+    .patch('/:albumId/cover', async ({ params: { albumId }, body: { cover }, status }) => {
+        const url = await Album.updateAlbumCover(albumId, cover)
+        return status(200, { coverUrl: url, message: 'Cover berhasil diperbarui' })
+    }, {
+        body: AlbumModel.UploadCover
+    })

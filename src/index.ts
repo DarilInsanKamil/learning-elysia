@@ -3,6 +3,7 @@ import { user } from "./modules/user";
 import { auth } from "./modules/auth";
 import { logger } from "@bogeychan/elysia-logger";
 import { album } from "./modules/album";
+import staticPlugin from "@elysiajs/static";
 
 export const app = new Elysia()
   .use(
@@ -10,6 +11,7 @@ export const app = new Elysia()
       level: "info",
     })
   )
+  .use(staticPlugin())
   .use(user)
   .use(auth)
   .use(album)

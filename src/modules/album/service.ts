@@ -1,18 +1,16 @@
 import { nanoid } from "nanoid";
 import { AlbumModel } from "./model";
 import { pool } from "../../db";
-import { status } from "elysia";
-import { UserError } from "../../errors/userError";
 import { AlbumError } from "../../errors/albumError";
 
 export abstract class Album {
-    static async addAlbum({ name, year, cover }: AlbumModel.AlbumPayload) {
+    static async addAlbum({ name, year }: AlbumModel.AlbumPayload) {
         const id = `album-${nanoid(16)}`
         const createdAt = new Date()
 
         const albumQuery = {
-            text: 'insert into albums (id, name, year, cover, created_at, updated_at) values ($1, $2, $3, $4, $5, $6) RETURNING id',
-            values: [id, name, year, cover, createdAt.toISOString(), createdAt.toISOString()]
+            text: 'insert into albums (id, name, year, created_at, updated_at) values ($1, $2, $3, $4, $5, $6) RETURNING id',
+            values: [id, name, year, createdAt.toISOString(), createdAt.toISOString()]
         }
 
         const result = await pool.query(albumQuery)
@@ -46,13 +44,13 @@ export abstract class Album {
         return result.rows[0]
     }
 
-    static async putAlbumById(id: string, { name, year, cover }: AlbumModel.AlbumPayloadById) {
+    static async putAlbumById(id: string, { name, year }: AlbumModel.AlbumPayloadById) {
         await this.getAlbumById(id)
 
         const updated_at = new Date().toISOString()
         const albumQuery = {
             text: 'update albums set name = $1, year = $2, cover = $3, updated_at = $4 where id = $5 RETURNING id',
-            values: [name, year, cover, updated_at, id]
+            values: [name, year, updated_at, id]
         }
 
         const result = await pool.query(albumQuery)
@@ -71,5 +69,21 @@ export abstract class Album {
         if (!result.rows.length) {
             throw new AlbumError('Gagal menghapus album', 400)
         }
+    }
+
+    static async updateAlbumCover(albumId: string, cover: File) {
+        const fileName = `${albumId}-${Date.now()}.${cover.type.split('/')[1]}`
+        const path = `public/covers/${fileName}`
+
+        await Bun.write(path, cover)
+
+        const coverUrl = `/public/covers/${fileName}`
+        const albumQuery = {
+            text: 'UPDATE albums SET cover = $1 WHERE id = $2',
+            values: [coverUrl, albumId]
+        }
+        await pool.query(albumQuery)
+
+        return coverUrl
     }
 }

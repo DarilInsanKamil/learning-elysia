@@ -2,17 +2,15 @@ import { t } from 'elysia'
 
 export namespace AlbumModel {
     export const AlbumPayload = t.Object({
-        name: t.String(),
+        name: t.String({ minLength: 1 }),
         year: t.Number(),
-        cover: t.String()
     })
 
     export type AlbumPayload = typeof AlbumPayload.static
 
     export const AlbumPayloadById = t.Object({
-        name: t.String(),
+        name: t.String({ minLength: 1 }),
         year: t.Number(),
-        cover: t.String()
     })
 
     export type AlbumPayloadById = typeof AlbumPayloadById.static
@@ -23,6 +21,12 @@ export namespace AlbumModel {
     })
 
     export type AlbumResponsePost = typeof AlbumResponsePost.static
+
+    export const AlbumResponseDelete = t.Object({
+        message: t.String(),
+    })
+
+    export type AlbumResponseDelete = typeof AlbumResponseDelete.static
 
     export const AlbumResponse = t.Array(
         t.Object({
@@ -53,6 +57,15 @@ export namespace AlbumModel {
         message: t.String()
     })
     export type ErrorResponse = typeof ErrorResponse.static
+
+     export const UploadCover = t.Object({
+        cover: t.File({
+            type: 'image',
+            maxSize: '6m'
+        })
+    })
+    export type UploadCover = typeof UploadCover.static
+
 
     export const AlbumInvalidPost = t.Literal('Gagal menambahkan album')
     export type AlbumInvalidPost = typeof AlbumInvalidPost.static
