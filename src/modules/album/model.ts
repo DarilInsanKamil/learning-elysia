@@ -33,7 +33,7 @@ export namespace AlbumModel {
             id: t.String(),
             name: t.String(),
             year: t.Number(),
-            cover: t.String(),
+            cover: t.Nullable(t.String()),
             created_at: t.String(),
             updated_at: t.String()
         })

@@ -9,7 +9,7 @@ export abstract class Album {
         const createdAt = new Date()
 
         const albumQuery = {
-            text: 'insert into albums (id, name, year, created_at, updated_at) values ($1, $2, $3, $4, $5, $6) RETURNING id',
+            text: 'insert into albums (id, name, year, created_at, updated_at) values ($1, $2, $3, $4, $5) RETURNING id',
             values: [id, name, year, createdAt.toISOString(), createdAt.toISOString()]
         }
 

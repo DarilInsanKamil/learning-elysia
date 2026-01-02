@@ -10,7 +10,6 @@ describe('Album Endpoints', () => {
         const { error, status } = await api.albums.create.post({
             name: '',
             year: 200,
-            cover: 'asdsd'
         })
 
         expect(status).toBe(422)
@@ -20,7 +19,6 @@ describe('Album Endpoints', () => {
         const { data, error, status } = await api.albums.create.post({
             name: 'Nurture',
             year: 2021,
-            cover: 'sdsadas'
         })
 
         expect(status).toBe(201)
@@ -54,7 +52,6 @@ describe('Album Endpoints', () => {
         const { error, status } = await api.albums({ albumId: 'album-MkDm9i5OXcGQ8Z3t' }).put({
             name: '',
             year: 2024,
-            cover: 'sdasad'
         })
 
         expect(status).toBe(422)
@@ -64,7 +61,6 @@ describe('Album Endpoints', () => {
         const { error, status } = await api.albums({ albumId: 'album-1' }).put({
             name: 'koamng',
             year: 2024,
-            cover: 'sdasad'
         })
 
         expect(status).toBe(404)

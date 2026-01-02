@@ -23,4 +23,5 @@ export const authGuard = new Elysia()
                 userId: payload.sub,
             },
         };
-    });
+    })
+    .as('scoped')

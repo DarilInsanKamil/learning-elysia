@@ -2,6 +2,7 @@ import Elysia, { status, t } from "elysia";
 import { Album } from "./service";
 import { AlbumModel } from "./model";
 import { AlbumError } from "../../errors/albumError";
+import { authGuard } from "../../utils/authGuard";
 
 export const album = new Elysia({ prefix: '/albums' })
     .error({ ALBUM_ERROR: AlbumError })
@@ -10,24 +11,7 @@ export const album = new Elysia({ prefix: '/albums' })
             set.status = error.status;
             return error.toResponse();
         }
-    })
-    .post(
-        '/create',
-        async ({ body }) => {
-            const response = await Album.addAlbum(body)
-            return status(201, {
-                message: "Berhasil menambahkan album",
-                id: response
-            })
-        }, {
-        body: AlbumModel.AlbumPayload,
-        response: {
-            201: AlbumModel.AlbumResponsePost,
-            400: AlbumModel.ErrorResponse
-        }
-    }
-    )
-    .get(
+    }).get(
         '/',
         async () => {
             const response = await Album.getAlbum()
@@ -50,6 +34,23 @@ export const album = new Elysia({ prefix: '/albums' })
         response: {
             200: AlbumModel.AlbumResponseById,
             404: AlbumModel.ErrorResponse
+        }
+    }
+    )
+    .use(authGuard)
+    .post(
+        '/create',
+        async ({ body }) => {
+            const response = await Album.addAlbum(body)
+            return status(201, {
+                message: "Berhasil menambahkan album",
+                id: response
+            })
+        }, {
+        body: AlbumModel.AlbumPayload,
+        response: {
+            201: AlbumModel.AlbumResponsePost,
+            400: AlbumModel.ErrorResponse
         }
     }
     )
@@ -88,9 +89,13 @@ export const album = new Elysia({ prefix: '/albums' })
         }
     }
     )
-    .patch('/:albumId/cover', async ({ params: { albumId }, body: { cover }, status }) => {
-        const url = await Album.updateAlbumCover(albumId, cover)
-        return status(200, { coverUrl: url, message: 'Cover berhasil diperbarui' })
-    }, {
+    .patch('/:albumId/cover',
+        async ({ params: { albumId }, body: { cover }, status }) => {
+            const url = await Album.updateAlbumCover(albumId, cover)
+            return status(200, {
+                coverUrl: url,
+                message: 'Cover berhasil diperbarui'
+            })
+        }, {
         body: AlbumModel.UploadCover
     })
