@@ -2,6 +2,8 @@ import { nanoid } from "nanoid";
 import { AlbumModel } from "./model";
 import { pool } from "../../db";
 import { status } from "elysia";
+import { UserError } from "../../errors/userError";
+import { AlbumError } from "../../errors/albumError";
 
 export abstract class Album {
     static async addAlbum({ name, year, cover }: AlbumModel.AlbumPayload) {
@@ -16,7 +18,7 @@ export abstract class Album {
         const result = await pool.query(albumQuery)
 
         if (!result.rows.length) {
-            throw status(400, 'Gagal menambahkan album' satisfies AlbumModel.AlbumInvalidPost)
+            throw new AlbumError('Gagal menambahkan album', 400)
         }
         return result.rows[0].id
     }
@@ -27,7 +29,7 @@ export abstract class Album {
 
         const result = await pool.query(albumQuery)
         if (!result.rows.length) {
-            throw status(400, 'Belum ada album' satisfies AlbumModel.AlbumInvalid)
+            throw new AlbumError('Belum ada album', 400)
         }
         return result.rows
     }
@@ -39,12 +41,13 @@ export abstract class Album {
         }
         const result = await pool.query(albumQuery)
         if (!result.rows.length) {
-            throw status(404, 'Album tidak ada')
+            throw new AlbumError('Album tidak ada, id tidak ditemukan', 404)
         }
         return result.rows[0]
     }
 
     static async putAlbumById(id: string, { name, year, cover }: AlbumModel.AlbumPayloadById) {
+        await this.getAlbumById(id)
 
         const updated_at = new Date().toISOString()
         const albumQuery = {
@@ -54,18 +57,19 @@ export abstract class Album {
 
         const result = await pool.query(albumQuery)
         if (!result.rows.length) {
-            throw status(404, 'Gagal memperbarui album, id album tidak ada')
+            throw new AlbumError('Gagal memperbarui album', 400)
         }
         return result.rows[0].id
     }
     static async deleteAlbumById(albumId: string) {
+        await this.getAlbumById(albumId)
         const albumQuery = {
             text: 'DELETE FROM albums WHERE id = $1 RETURNING id',
             values: [albumId]
         }
         const result = await pool.query(albumQuery)
         if (!result.rows.length) {
-            throw status(404, 'Gagal menghapus album, id album tidak ada')
+            throw new AlbumError('Gagal menghapus album', 400)
         }
     }
 }

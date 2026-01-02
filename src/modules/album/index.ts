@@ -1,8 +1,16 @@
 import Elysia, { status, t } from "elysia";
 import { Album } from "./service";
 import { AlbumModel } from "./model";
+import { AlbumError } from "../../errors/albumError";
 
 export const album = new Elysia({ prefix: '/albums' })
+    .error({ ALBUM_ERROR: AlbumError })
+    .onError(({ code, error, set }) => {
+        if (code === 'ALBUM_ERROR') {
+            set.status = error.status;
+            return error.toResponse();
+        }
+    })
     .post(
         '/create',
         async ({ body }) => {
@@ -15,7 +23,7 @@ export const album = new Elysia({ prefix: '/albums' })
         body: AlbumModel.AlbumPayload,
         response: {
             201: AlbumModel.AlbumResponsePost,
-            400: AlbumModel.AlbumInvalidPost
+            400: AlbumModel.ErrorResponse
         }
     }
     )
@@ -27,7 +35,7 @@ export const album = new Elysia({ prefix: '/albums' })
         }, {
         response: {
             200: AlbumModel.AlbumResponse,
-            400: AlbumModel.AlbumInvalid
+            400: AlbumModel.ErrorResponse
         }
     }
     )
@@ -41,7 +49,7 @@ export const album = new Elysia({ prefix: '/albums' })
         }, {
         response: {
             200: AlbumModel.AlbumResponseById,
-            404: t.Literal('Album tidak ada')
+            404: AlbumModel.ErrorResponse
         }
     }
     )
@@ -60,7 +68,7 @@ export const album = new Elysia({ prefix: '/albums' })
         body: AlbumModel.AlbumPayloadById,
         response: {
             200: AlbumModel.AlbumResponsePost,
-            404: t.Literal('Album tidak ada')
+            404: AlbumModel.ErrorResponse
         }
     }
     )
@@ -74,7 +82,8 @@ export const album = new Elysia({ prefix: '/albums' })
             }
         }, {
         response: {
-            404: t.Literal('Gagak menghapus album, Id album tidak ada')
+            204: t.Literal('Berhasil menghapus album'),
+            404: AlbumModel.ErrorResponse
         }
     }
     )

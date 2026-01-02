@@ -2,6 +2,7 @@ import Elysia, { status } from "elysia";
 import { UserModel } from "./model";
 import { User } from "./service";
 import { authGuard } from "../../utils/authGuard";
+import { UserError } from "../../errors/userError";
 
 export const user = new Elysia({ prefix: '/auth' })
     .use(authGuard)
@@ -19,6 +20,13 @@ export const user = new Elysia({ prefix: '/auth' })
     //         }
     //     }
     // )
+    .error({ USER_ERROR: UserError })
+    .onError(({ code, error, set }) => {
+        if (code === 'USER_ERROR') {
+            set.status = error.status;
+            return error.toResponse();
+        }
+    })
     .get(
         '/user/:id',
         async ({ params: id }) => {
@@ -28,7 +36,7 @@ export const user = new Elysia({ prefix: '/auth' })
         params: UserModel.GetUserById,
         response: {
             200: UserModel.GetUserByIdResponse,
-            400: UserModel.GetUserByIdInvalid
+            400: UserModel.ErrorResponse
         }
     }
     )

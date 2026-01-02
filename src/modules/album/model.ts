@@ -8,7 +8,7 @@ export namespace AlbumModel {
     })
 
     export type AlbumPayload = typeof AlbumPayload.static
-  
+
     export const AlbumPayloadById = t.Object({
         name: t.String(),
         year: t.Number(),
@@ -47,6 +47,12 @@ export namespace AlbumModel {
 
 
     export type AlbumResponseById = typeof AlbumResponseById.static
+
+    export const ErrorResponse = t.Object({
+        success: t.Boolean(),
+        message: t.String()
+    })
+    export type ErrorResponse = typeof ErrorResponse.static
 
     export const AlbumInvalidPost = t.Literal('Gagal menambahkan album')
     export type AlbumInvalidPost = typeof AlbumInvalidPost.static

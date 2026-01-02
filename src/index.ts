@@ -4,7 +4,7 @@ import { auth } from "./modules/auth";
 import { logger } from "@bogeychan/elysia-logger";
 import { album } from "./modules/album";
 
-const app = new Elysia()
+export const app = new Elysia()
   .use(
     logger({
       level: "info",

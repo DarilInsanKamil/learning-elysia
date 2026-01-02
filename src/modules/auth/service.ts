@@ -1,6 +1,7 @@
 import { status } from "elysia"
 import { pool } from "../../db"
 import { AuthModel } from "./model"
+import { AuthError } from "../../errors/authError"
 
 export abstract class Authentication {
     static async addRefreshToken(token: string) {
@@ -10,7 +11,7 @@ export abstract class Authentication {
         }
         const result = await pool.query(tokenQuery)
         if (!result) {
-            throw status(400, 'Gagal menambahkan token' satisfies AuthModel.AuthTokenInvalid)
+            throw new AuthError('Gagal menambahkan token', 400)
         }
         return result
     }
@@ -23,10 +24,11 @@ export abstract class Authentication {
 
         const result = await pool.query(tokenQuery)
         if (!result.rows.length) {
-            throw status(400, 'Refresh token tidak valid')
+            throw new AuthError('Token tidak valid', 400)
         }
     }
     static async deleteRefreshToken(token: string) {
+        await this.verifyRefreshToken(token)
         const tokenQuery = {
             text: 'DELETE FROM authentications WHERE token = $1',
             values: [token]

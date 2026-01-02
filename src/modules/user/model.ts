@@ -47,6 +47,13 @@ export namespace UserModel {
     })
 
     export type VerifyCredentialResponse = typeof VerifyCredentialResponse.static
+
+    export const ErrorResponse = t.Object({
+        success: t.Boolean(),
+        message: t.String()
+    })
+    export type ErrorResponse = typeof ErrorResponse.static
+
     export const VerifyCredentialInvalid = t.Literal('Credential yang anda berikan salah')
     export const UserInvalid = t.Literal('Gagal menambahkan user baru')
     export const GetUserByIdInvalid = t.Literal('User Not Found')

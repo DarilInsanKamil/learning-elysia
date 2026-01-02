@@ -5,9 +5,18 @@ import { jwt } from "@elysiajs/jwt";
 import { Authentication } from "./service";
 import { authGuard } from "../../utils/authGuard";
 import { jwtPlugin } from "../../utils/jwtPlugin";
+import { AuthModel } from "./model";
+import { AuthError } from "../../errors/authError";
 
 export const auth = new Elysia({ prefix: '/auth' })
     .use(jwtPlugin)
+    .error({ AUTH_ERROR: AuthError })
+    .onError(({ code, error, set }) => {
+        if (code === 'AUTH_ERROR') {
+            set.status = error.status;
+            return error.toResponse();
+        }
+    })
     .post(
         '/sign-in',
         async ({ body, jwt: jwtService, cookie: { accessToken, refreshToken } }) => {
@@ -46,7 +55,7 @@ export const auth = new Elysia({ prefix: '/auth' })
         body: UserModel.VerifyCredentialUser,
         response: {
             200: UserModel.VerifyCredentialResponse,
-            400: UserModel.VerifyCredentialInvalid
+            400: AuthModel.ErrorResponse
         }
     }
     )
@@ -118,4 +127,4 @@ export const auth = new Elysia({ prefix: '/auth' })
             }
         }
     )
-    
+
