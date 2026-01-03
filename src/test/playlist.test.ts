@@ -81,4 +81,40 @@ describe('', () => {
         expect(status).toBe(404)
         expect(data).toBeDefined()
     })
+    it('should success delete playlist user valid playlist id', async () => {
+        console.log(token)
+        const { data, error, status } = await api.playlist({ playlistId: 'playlist-bIcU4DqW4F3VCoGw' }).delete(
+            {
+                headers: {
+                    cookie: `accessToken=${token}`
+                }
+            }
+        )
+        expect(status).toBe(204)
+    })
+
+    it('should fail delete playlist user with invalid playlist id', async () => {
+        const { data, error, status } = await api.playlist({ playlistId: 'playlist-W4F3VCoGw' }).delete(
+            undefined,
+            {
+                headers: {
+                    cookie: `accessToken=${token}`
+                }
+            }
+        )
+
+        expect(status).toBe(404)
+    })
+
+    it('should success delete playlist user with valid playlist', async () => {
+        const { data, error, status } = await api.playlist({ playlistId: 'playlist-bIcU4DqW4F3VCoGw' }).delete(
+            undefined,
+            {
+                headers: {
+                    cookie: `accessToken=${token}`
+                }
+            }
+        )
+        expect(status).toBe(200)
+    })
 })

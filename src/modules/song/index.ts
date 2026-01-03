@@ -76,7 +76,7 @@ export const song = new Elysia({ prefix: '/song' })
             return status(204)
         }, {
         response: {
-            400: SongModel.ErrorResponse,
+            404: SongModel.ErrorResponse,
         }
     }
     )

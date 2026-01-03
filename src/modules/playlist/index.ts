@@ -70,6 +70,7 @@ export const playlist = new Elysia({ prefix: '/playlist' })
         body: PlaylistModel.PlaylistPayload,
         response: {
             200: PlaylistModel.SuccessResponsePost,
+            404: PlaylistModel.ErrorResponse,
             400: PlaylistModel.ErrorResponse
         }
     }
@@ -80,12 +81,12 @@ export const playlist = new Elysia({ prefix: '/playlist' })
             const userId = auth.userId
             const { playlistId } = params
             await Playlist.deletePlaylistUser(playlistId, userId)
-            return status(204, {
+            return status(200, {
                 message: 'Berhasil menghapus playlist'
             })
         }, {
         response: {
-            400: PlaylistModel.ErrorResponse
+            404: PlaylistModel.ErrorResponse
         }
     }
     )
