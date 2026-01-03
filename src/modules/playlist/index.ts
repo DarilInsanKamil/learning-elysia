@@ -56,3 +56,36 @@ export const playlist = new Elysia({ prefix: '/playlist' })
             })
         }
     )
+    .patch(
+        '/:playlistId',
+        async ({ auth, body, params }) => {
+            const userId = auth.userId
+            const { playlistId } = params
+            const response = await Playlist.editPlaylistById(playlistId, userId, body)
+            return status(200, {
+                message: 'Berhasil memperbarui playlist',
+                id: response
+            })
+        }, {
+        body: PlaylistModel.PlaylistPayload,
+        response: {
+            200: PlaylistModel.SuccessResponsePost,
+            400: PlaylistModel.ErrorResponse
+        }
+    }
+    )
+    .delete(
+        '/:playlistId',
+        async ({ auth, params }) => {
+            const userId = auth.userId
+            const { playlistId } = params
+            await Playlist.deletePlaylistUser(playlistId, userId)
+            return status(204, {
+                message: 'Berhasil menghapus playlist'
+            })
+        }, {
+        response: {
+            400: PlaylistModel.ErrorResponse
+        }
+    }
+    )

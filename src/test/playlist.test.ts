@@ -21,7 +21,7 @@ describe('', () => {
     it('should create playlist successfully', async () => {
 
         const { data, error, status } = await api.playlist.create.post(
-            { name: 'My New Playlist' },
+            { name: '2025 Wrapped' },
             {
                 headers: {
                     cookie: `accessToken=${token}`
@@ -49,5 +49,36 @@ describe('', () => {
             }
         )
         expect(status).toBe(200)
+    })
+
+    it('should success update playlist user', async () => {
+        const { data, error, status } = await api.playlist({ playlistId: 'playlist-bIcU4DqW4F3VCoGw' }).patch(
+            {
+                name: 'hello world2'
+            },
+            {
+                headers: {
+                    cookie: `accessToken=${token}`
+                }
+            }
+        )
+        expect(status).toBe(200)
+        expect(error).toBeNull()
+        expect(data).toBeDefined()
+    })
+
+    it('should fail update playlist with invalid playlist id', async () => {
+        const { data, error, status } = await api.playlist({ playlistId: 'playlist-W4F3VCoGw' }).patch(
+            {
+                name: 'hello world2'
+            },
+            {
+                headers: {
+                    cookie: `accessToken=${token}`
+                }
+            }
+        )
+        expect(status).toBe(404)
+        expect(data).toBeDefined()
     })
 })
