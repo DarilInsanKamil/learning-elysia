@@ -21,9 +21,9 @@ describe('Song Endpoint', () => {
 
     it('should create album successfully', async () => {
         const { data, error, status } = await api.song.create.post({
-            title: 'monalisa',
+            title: 'lifelike',
             year: 2021,
-            genre: 'electronic pop',
+            genre: 'porter pop',
             performer: 'porter robinson',
             duration: 120,
             album_id: ''
