@@ -48,6 +48,15 @@ describe('Album Endpoints', () => {
         expect(status).toBe(404)
     })
 
+    it('should success update with valid payload', async () => {
+        const { error, status } = await api.albums({ albumId: 'album-MkDm9i5OXcGQ8Z3t' }).put({
+            name: '',
+            year: 2024,
+        })
+
+        expect(status).toBe(200)
+    })
+
     it('should fail update with invalid payload', async () => {
         const { error, status } = await api.albums({ albumId: 'album-MkDm9i5OXcGQ8Z3t' }).put({
             name: '',
