@@ -1,8 +1,17 @@
 import Elysia, { status } from "elysia";
 import { Song } from "./service";
 import { SongModel } from "./model";
+import { SongError } from "../../errors/songError";
+import { authGuard } from "../../utils/authGuard";
 
 export const song = new Elysia({ prefix: '/song' })
+    .error({ SONG_ERROR: SongError })
+    .onError(({ code, error, set }) => {
+        if (code === 'SONG_ERROR') {
+            set.status = error.status;
+            return error.toResponse();
+        }
+    })
     .get(
         '/',
         async () => {
@@ -34,6 +43,7 @@ export const song = new Elysia({ prefix: '/song' })
         }
     }
     )
+    .use(authGuard)
     .post(
         '/create',
         async ({ body }) => {
