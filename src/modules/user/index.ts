@@ -5,21 +5,20 @@ import { authGuard } from "../../utils/authGuard";
 import { UserError } from "../../errors/userError";
 
 export const user = new Elysia({ prefix: '/auth' })
-    .use(authGuard)
-    // .post(
-    //     '/register',
-    //     async ({ body }) => {
-    //         const response = await User.registerUser(body)
-    //         return response
-    //     },
-    //     {
-    //         body: UserModel.UserPayload,
-    //         response: {
-    //             200: UserModel.RegisterResponse,
-    //             400: UserModel.UserInvalid
-    //         }
-    //     }
-    // )
+    .post(
+        '/register',
+        async ({ body }) => {
+            const response = await User.registerUser(body)
+            return response
+        },
+        {
+            body: UserModel.UserPayload,
+            response: {
+                200: UserModel.RegisterResponse,
+                400: UserModel.UserInvalid
+            }
+        }
+    )
     .error({ USER_ERROR: UserError })
     .onError(({ code, error, set }) => {
         if (code === 'USER_ERROR') {
@@ -27,15 +26,17 @@ export const user = new Elysia({ prefix: '/auth' })
             return error.toResponse();
         }
     })
+    .use(authGuard)
     .get(
-        '/user/:id',
-        async ({ params: id }) => {
-            const response = await User.getUserById(id.id)
-            return response
+        '/me',
+        async ({ auth }) => {
+            const userId = auth.userId
+            const response = await User.getUserById(userId)
+            return status(200, {
+                response
+            })
         }, {
-        params: UserModel.GetUserById,
         response: {
-            200: UserModel.GetUserByIdResponse,
             404: UserModel.ErrorResponse
         }
     }

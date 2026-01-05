@@ -22,10 +22,10 @@ export abstract class User {
         return result.rows[0];
     }
 
-    static async getUserById(id: string) {
+    static async getUserById(userId: string) {
         const userQuery = {
             text: 'SELECT id, username, fullname from users WHERE id = $1',
-            values: [id]
+            values: [userId]
         }
 
         const result = await pool.query(userQuery)
